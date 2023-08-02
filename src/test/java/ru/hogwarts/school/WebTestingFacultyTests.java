@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import ru.hogwarts.school.controller.FacultyController;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
@@ -37,12 +40,20 @@ public class WebTestingFacultyTests {
         faculty2.setName("Slytherin");
         faculty2.setColor("green");
 
+        Faculty faculty3 = new Faculty();
+        faculty3.setName("Hufflepuff");
+        faculty3.setColor("yellow");
+
         Assertions
                 .assertThat(this.restTemplate.postForObject("http://localhost:" + port + "/faculty", faculty1, String.class))
                 .isNotNull();
 
         Assertions
                 .assertThat(this.restTemplate.postForObject("http://localhost:" + port + "/faculty", faculty2, String.class))
+                .isNotNull();
+
+        Assertions
+                .assertThat(this.restTemplate.postForObject("http://localhost:" + port + "/faculty", faculty3, String.class))
                 .isNotNull();
 
     }
@@ -56,14 +67,23 @@ public class WebTestingFacultyTests {
 
     @Test
     void testGetFaculty() throws Exception {
-        Faculty expected = new Faculty();
-        expected.setId(1);
-        expected.setName("Griffindor");
-        expected.setColor("red");
+        Faculty expected1 = new Faculty();
+        expected1.setId(1);
+        expected1.setName("Griffindor");
+        expected1.setColor("red");
+
+        Faculty expected2 = new Faculty();
+        expected2.setId(3);
+        expected2.setName("Hufflepuff");
+        expected2.setColor("yellow");
 
         Assertions
                 .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/1", Faculty.class))
-                .isEqualTo(expected);
+                .isEqualTo(expected1);
+
+        Assertions
+                .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/3", Faculty.class))
+                .isEqualTo(expected2);
     }
 
     @Test
@@ -73,7 +93,12 @@ public class WebTestingFacultyTests {
         exp.setName("Ravencrow");
         exp.setColor("blue");
 
-        this.restTemplate.put("http://localhost:" + port + "/faculty", exp, String.class);
+//        this.restTemplate.put("http://localhost:" + port + "/faculty", exp, String.class);
+
+        ResponseEntity<Faculty> updatedFaculty = restTemplate.exchange(
+                "http://localhost:" + port + "/faculty",
+                HttpMethod.PUT,
+                new HttpEntity<>(exp), Faculty.class);
 
         Assertions
                 .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/2", Faculty.class))
@@ -82,7 +107,7 @@ public class WebTestingFacultyTests {
 
     @Test
     void testDeleteFaculty() throws Exception {
-        this.restTemplate.delete("http://localhost:" + port + "/faculty/2", Student.class);
+        this.restTemplate.delete("http://localhost:" + port + "/faculty/2", Faculty.class);
 
         Faculty expected = new Faculty();
         expected.setId(0);
