@@ -68,17 +68,17 @@ public class WebTestingFacultyTests {
     @Test
     void testGetFaculty() throws Exception {
         Faculty expected1 = new Faculty();
-        expected1.setId(1);
+        expected1.setId(2);
         expected1.setName("Griffindor");
         expected1.setColor("red");
 
         Faculty expected2 = new Faculty();
         expected2.setId(3);
-        expected2.setName("Hufflepuff");
-        expected2.setColor("yellow");
+        expected2.setName("Slytherin");
+        expected2.setColor("green");
 
         Assertions
-                .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/1", Faculty.class))
+                .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/2", Faculty.class))
                 .isEqualTo(expected1);
 
         Assertions
@@ -86,44 +86,23 @@ public class WebTestingFacultyTests {
                 .isEqualTo(expected2);
     }
 
-//    @Test
-//    void testPutFaculty() throws Exception {
-//        Faculty exp = new Faculty();
-//        exp.setId(2);
-//        exp.setName("Ravencrow");
-//        exp.setColor("blue");
-//
-//        this.restTemplate.put("http://localhost:" + port + "/faculty", exp, String.class);
-//
-////        ResponseEntity<Faculty> updatedFaculty = restTemplate.exchange(
-////                "http://localhost:" + port + "/faculty",
-////                HttpMethod.PUT,
-////                new HttpEntity<>(exp), Faculty.class);
-//
-//        Assertions
-//                .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/2", Faculty.class))
-//                .isEqualTo(exp);
-//    }
 
     @Test
     void testPutFaculty() throws Exception {
-        Faculty expected1 = new Faculty();
-        expected1.setId(1);
-        expected1.setName("Griffindor");
-        expected1.setColor("red");
+        Faculty mockFaculty = new Faculty();
+        mockFaculty.setId(1);
+        mockFaculty.setName("Mock Faculty");
+        mockFaculty.setColor("blue");
 
-        Faculty expected2 = new Faculty();
-        expected2.setId(3);
-        expected2.setName("Hufflepuff");
-        expected2.setColor("yellow");
+
+        this.restTemplate.postForObject("http://localhost:" + port + "/faculty/", new Faculty(1, "Mock Faculty2", "blue"), String.class);
+
+
+        this.restTemplate.put("http://localhost:" + port + "/faculty/", mockFaculty, String.class);
 
         Assertions
                 .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/1", Faculty.class))
-                .isEqualTo(expected1);
-
-        Assertions
-                .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/3", Faculty.class))
-                .isEqualTo(expected2);
+                .isEqualTo(mockFaculty);
     }
 
     @Test
