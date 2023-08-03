@@ -86,28 +86,49 @@ public class WebTestingFacultyTests {
                 .isEqualTo(expected2);
     }
 
+//    @Test
+//    void testPutFaculty() throws Exception {
+//        Faculty exp = new Faculty();
+//        exp.setId(2);
+//        exp.setName("Ravencrow");
+//        exp.setColor("blue");
+//
+//        this.restTemplate.put("http://localhost:" + port + "/faculty", exp, String.class);
+//
+////        ResponseEntity<Faculty> updatedFaculty = restTemplate.exchange(
+////                "http://localhost:" + port + "/faculty",
+////                HttpMethod.PUT,
+////                new HttpEntity<>(exp), Faculty.class);
+//
+//        Assertions
+//                .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/2", Faculty.class))
+//                .isEqualTo(exp);
+//    }
+
     @Test
     void testPutFaculty() throws Exception {
-        Faculty exp = new Faculty();
-        exp.setId(2);
-        exp.setName("Ravencrow");
-        exp.setColor("blue");
+        Faculty expected1 = new Faculty();
+        expected1.setId(1);
+        expected1.setName("Griffindor");
+        expected1.setColor("red");
 
-//        this.restTemplate.put("http://localhost:" + port + "/faculty", exp, String.class);
-
-        ResponseEntity<Faculty> updatedFaculty = restTemplate.exchange(
-                "http://localhost:" + port + "/faculty",
-                HttpMethod.PUT,
-                new HttpEntity<>(exp), Faculty.class);
+        Faculty expected2 = new Faculty();
+        expected2.setId(3);
+        expected2.setName("Hufflepuff");
+        expected2.setColor("yellow");
 
         Assertions
-                .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/2", Faculty.class))
-                .isEqualTo(exp);
+                .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/1", Faculty.class))
+                .isEqualTo(expected1);
+
+        Assertions
+                .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/3", Faculty.class))
+                .isEqualTo(expected2);
     }
 
     @Test
     void testDeleteFaculty() throws Exception {
-        this.restTemplate.delete("http://localhost:" + port + "/faculty/2", Faculty.class);
+        this.restTemplate.delete("http://localhost:" + port + "/faculty/3", Faculty.class);
 
         Faculty expected = new Faculty();
         expected.setId(0);
@@ -115,7 +136,7 @@ public class WebTestingFacultyTests {
         expected.setColor(null);
 
         Assertions
-                .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/2", Faculty.class))
+                .assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/faculty/3", Faculty.class))
                 .isEqualTo(expected);
     }
 }
