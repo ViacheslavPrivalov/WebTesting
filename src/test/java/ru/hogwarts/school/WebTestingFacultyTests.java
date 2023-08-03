@@ -95,8 +95,9 @@ public class WebTestingFacultyTests {
         mockFaculty.setColor("blue");
 
 
-        this.restTemplate.postForObject("http://localhost:" + port + "/faculty/", new Faculty(1, "Mock Faculty2", "blue"), String.class);
-
+        Faculty updatedMockFaculty = facultyController.createFaculty(mockFaculty);
+        updatedMockFaculty.setName("Mock Faculty2");
+        updatedMockFaculty.setColor("grey");
 
         this.restTemplate.put("http://localhost:" + port + "/faculty/", mockFaculty, String.class);
 
